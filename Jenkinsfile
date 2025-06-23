@@ -124,8 +124,8 @@ pipeline {
                 currentBuild.result = 'SUCCESS' 
             }
             archiveArtifacts artifacts: 'gitleaks-report.sarif, checkov-report.xml, dependency-check-report.xml, trivy-fs-report.txt, trivy-image-report.html', allowEmptyArchive: true
-            echo 'Cleaning up containers...'
-            sh 'docker-compose down'
+            // echo 'Cleaning up containers...'
+            // sh 'docker-compose down'
         }
     }
 }
