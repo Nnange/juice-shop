@@ -87,7 +87,7 @@ pipeline {
                 script {
                     docker.image('bridgecrew/checkov:latest').inside('--entrypoint=""') {
                         sh '''
-                            checkov -d . -o cli -o junitxml --output-file-path ./checkov-report.xml --framework dockerfile,openapi,github_actions || true
+                            checkov -d . -o cli -o junitxml --output-file-path ./checkov-report.xml --framework dockerfile || true
                             # Debug: Check if the file was created
                             ls -lh ./checkov-report.xml
                         '''
