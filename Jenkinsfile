@@ -82,37 +82,37 @@ pipeline {
         }
 
         
-        // stage('Checkov Scan') {
-        //     steps {
-        //         script {
-        //             docker.image('bridgecrew/checkov:latest').inside('--entrypoint=""') {
-        //                 sh '''
-        //                     checkov -d . -o cli -o junitxml --output-file-path ./checkov-report.xml --framework dockerfile,openapi,github_actions || true
-        //                     # Debug: Check if the file was created
-        //                     ls -lh ./checkov-report.xml
-        //                 '''
-        //             }
-        //         }
-        //         // Publish JUnit results
-        //         // junit allowEmptyResults: true, testResults: 'checkov-report.xml', skipPublishingChecks: true
-        //         step([$class: 'JUnitResultArchiver', testResults: 'checkov-report.xml', allowEmptyResults: true, skipPublishingChecks: true, healthScaleFactor: 0.0])
-        //     }
-        //     post {
-        //         always {
-        //             script {
-        //                 if (fileExists('checkov-report.xml')) {
-        //                     def report = readFile('checkov-report.xml')
-        //                     echo "Checkov report size: ${report.length()} bytes"
-        //                     if (report.contains('failure')) {
-        //                         echo "Checkov detected ${report.count('failure')} failures. Review checkov-report.xml for details."
-        //                     }
-        //                 } else {
-        //                     echo "Warning: checkov-report.xml not found after execution."
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Checkov Scan') {
+            steps {
+                script {
+                    docker.image('bridgecrew/checkov:latest').inside('--entrypoint=""') {
+                        sh '''
+                            checkov -d . -o cli -o junitxml --output-file-path ./checkov-report.xml --framework dockerfile,openapi,github_actions || true
+                            # Debug: Check if the file was created
+                            ls -lh ./checkov-report.xml
+                        '''
+                    }
+                }
+                // Publish JUnit results
+                // junit allowEmptyResults: true, testResults: 'checkov-report.xml', skipPublishingChecks: true
+                step([$class: 'JUnitResultArchiver', testResults: 'checkov-report.xml', allowEmptyResults: true, skipPublishingChecks: true, healthScaleFactor: 0.0])
+            }
+            post {
+                always {
+                    script {
+                        if (fileExists('checkov-report.xml')) {
+                            def report = readFile('checkov-report.xml')
+                            echo "Checkov report size: ${report.length()} bytes"
+                            if (report.contains('failure')) {
+                                echo "Checkov detected ${report.count('failure')} failures. Review checkov-report.xml for details."
+                            }
+                        } else {
+                            echo "Warning: checkov-report.xml not found after execution."
+                        }
+                    }
+                }
+            }
+        }
         
 
     }
